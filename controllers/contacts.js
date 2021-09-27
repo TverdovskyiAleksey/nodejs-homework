@@ -22,10 +22,6 @@ const getById = async (req, res, next) => {
 };
 
 const addContact = async (req, res, next) => {
-  //   const { error } = JoiSchema.validate(req.body);
-  //   if (error) {
-  //     throw new CreateError(400, error.message);
-  //   }
   const result = await contactsOperations.addContact(req.body);
   res.status(201).json({
     status: 'success',
@@ -51,10 +47,6 @@ const deleteContact = async (req, res, next) => {
 
 const updateContact = async (req, res, next) => {
   const { id } = req.params;
-  //   const { error } = JoiSchema.validate(req.body);
-  //   if (error) {
-  //     throw new CreateError(400, error.message);
-  //   }
   const result = await contactsOperations.updateById(id, req.body);
   if (!result) {
     throw new CreateError(404, `Product with id=${id} not found`);
