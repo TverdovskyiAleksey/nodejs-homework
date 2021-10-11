@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+<<<<<<< Updated upstream
 // const mangoose = require('mongoose');
 
 // require('dotenv').config();
@@ -30,6 +31,37 @@ const contactsRouter = require('./routes/api/contacts');
 //   .catch(error => {
 //     console.log(error.message);
 //   });
+=======
+const mangoose = require('mongoose');
+
+require('dotenv').config();
+
+const contactsRouter = require('./routes/api/contacts');
+
+const { DB_HOST } = process.env;
+const { Schema, model } = mangoose;
+
+const contactSchema = Schema({
+  name: String,
+  email: String,
+  phone: String,
+  favorite: Boolean,
+});
+
+const Contact = model('contact', contactSchema);
+
+mangoose
+  .connect(DB_HOST, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('connect sucess');
+  })
+  .catch(error => {
+    console.log(error.message);
+  });
+>>>>>>> Stashed changes
 
 const app = express();
 
