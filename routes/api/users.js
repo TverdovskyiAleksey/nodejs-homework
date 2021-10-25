@@ -6,9 +6,11 @@ const {
   upload,
 } = require('../../middlewares');
 
-const { auth: ctrl } = require('../../controllers');
+const { users: ctrl } = require('../../controllers');
 
 const router = express.Router();
+
+router.get('/verify/:verifyToken', controllerWrapper(ctrl.verify));
 
 router.patch(
   '/avatars',
