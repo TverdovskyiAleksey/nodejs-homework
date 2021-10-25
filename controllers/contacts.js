@@ -1,9 +1,14 @@
-// const contactsOperations = require('../model');
 const CreateError = require('http-errors');
 const { Contact } = require('../models');
 
 const listContacts = async (req, res) => {
-  const contacts = await Contact.find({});
+  const { page = 1, limit = 2 } = req.query;
+  const skip = (page - 1) * limit;
+  const { _id } = req.user;
+  const contacts = await Contact.find({ owner: _id }, '_id', {
+    skip,
+    limit: +limit,
+  }).populate('owner', 'email');
   res.json({
     status: 'success',
     code: 200,
@@ -14,16 +19,18 @@ const listContacts = async (req, res) => {
 };
 
 const getById = async (req, res) => {
-  const { id } = req.params;
-  const contact = await Contact.findById(id);
+  const { _id } = req.params;
+  const contactId = req.params.contactId;
+  const contact = await Contact.findById({ _id: contactId, owner: _id });
   if (!contact) {
-    throw new CreateError(404, `Prooduct with id=${id} not found`);
+    throw new CreateError(404, `Prooduct with id=${contactId} not found`);
   }
   res.json(contact);
 };
 
 const addContact = async (req, res) => {
-  const result = await Contact.create(req.body);
+  const newContact = { ...req.body, owner: req.user._id };
+  const result = await Contact.create(newContact);
   res.status(201).json({
     status: 'success',
     code: 201,
